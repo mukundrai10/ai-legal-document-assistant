@@ -1,6 +1,8 @@
 
 import re
 import streamlit as st
+from pypdf import PdfReader
+from io import BytesIO
 
 
 def analyze_document(text):
@@ -48,7 +50,7 @@ st.info(
 
 uploaded_file = st.file_uploader(
     "Upload a text document (.txt)",
-    type=["txt"],
+    type=["txt", "pdf"],
 )
 
 document_text = st.text_area(
@@ -59,13 +61,24 @@ document_text = st.text_area(
 
 if st.button("Analyze Document", type="primary"):
     if uploaded_file is not None:
+    if uploaded_file.name.lower().endswith(".pdf"):
+        try:
+            reader = PdfReader(BytesIO(uploaded_file.getvalue()))
+            text_to_analyze = "\n".join(
+                page.extract_text() or ""
+                for page in reader.pages
+            )
+        except Exception:
+            st.error("Could not read this PDF file.")
+            st.stop()
+    else:
         try:
             text_to_analyze = uploaded_file.getvalue().decode("utf-8")
         except UnicodeDecodeError:
-            st.error("This file could not be read as UTF-8 text.")
+            st.error("This text file could not be read as UTF-8.")
             st.stop()
-    else:
-        text_to_analyze = document_text
+else:
+    text_to_analyze = document_text
 
     if not text_to_analyze.strip():
         st.warning("Please upload a non-empty file or enter some text.")
