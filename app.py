@@ -45,11 +45,15 @@ def analyze_document(text):
 
     return "\n".join(report)
 
-
 if __name__ == "__main__":
-    sample = """
-    This agreement requires payment within 30 days.
-    Either party may request termination by written notice.
-    """
+    print("AI Legal Document Assistant")
+    print("-" * 35)
 
-    print(analyze_document(sample))
+    user_text = input("Enter a sentence from your document: ")
+
+    result = analyze_document(user_text)
+
+    print()
+    print(result)
+
+
