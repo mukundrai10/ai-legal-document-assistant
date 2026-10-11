@@ -49,7 +49,7 @@ st.info(
 )
 
 uploaded_file = st.file_uploader(
-    "Upload a text document (.txt)",
+    "Upload a text or PDF document",
     type=["txt", "pdf"],
 )
 
